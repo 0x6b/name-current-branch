@@ -1,0 +1,16 @@
+[package]
+name = "name-current-branch"
+version = "0.1.0"
+edition = "2024"
+description = "A CLI tool that automatically generates meaningful git branch names using Claude Code"
+
+[dependencies]
+anyhow = "1.0.99"
+git2 = "0.20.2"
+serde = { version = "1.0.221", features = ["derive"] }
+toml = "0.9.5"
+
+[profile.dev]
+lto = true
+codegen-units = 1
+panic = "abort"

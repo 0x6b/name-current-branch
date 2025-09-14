@@ -1,0 +1,32 @@
+[generator]
+# Claude CLI configuration for branch name generation
+command = "claude"
+# Claude CLI arguments
+args = ["--model", "sonnet", "--print"]
+
+[prompt]
+# A prompt template for generating branch names
+# Variables: {diff_content}
+template = '''
+Generate a git branch name in English only, following this exact format: {category}/{verb-based-description}
+
+Requirements:
+- Use ONLY English
+- Category must be one of: feat, fix, refactor, docs, test, chore, style, perf, build, ci
+- Description MUST start with a verb (add, remove, update, fix, create, etc.)
+- Use lowercase with hyphens between words
+- Keep total length under 50 characters
+- Be descriptive but concise
+
+Examples of correct format:
+- feat/add-user-authentication
+- fix/resolve-memory-leak
+- refactor/extract-validation-logic
+- docs/update-api-documentation
+
+OUTPUT ONLY THE BRANCH NAME, NO EXPLANATIONS OR EXTRA TEXT.
+
+Analyze these git changes and generate an appropriate branch name:
+
+{diff_content}
+'''
