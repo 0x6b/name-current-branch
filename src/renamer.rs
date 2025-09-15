@@ -1,6 +1,7 @@
-use std::process::Command;
+use std::{process::Command, time::Duration};
 
 use anyhow::{Result, anyhow, bail};
+use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{config::CONFIG, repository::Repository};
 
@@ -45,7 +46,16 @@ impl Renamer {
 
     // Generate a branch name using Claude CLI
     fn generate(diff: &str) -> Result<String> {
-        Command::new(&CONFIG.generator.command)
+        let spinner = ProgressBar::new_spinner();
+        spinner.set_style(
+            ProgressStyle::default_spinner()
+                .tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ ")
+                .template("{spinner:.cyan} {msg}")?,
+        );
+        spinner.set_message("Generating branch name with Claude Code...");
+        spinner.enable_steady_tick(Duration::from_millis(100));
+
+        let result = Command::new(&CONFIG.generator.command)
             .args(&CONFIG.generator.args)
             .arg(CONFIG.prompt.format_with_diff(diff))
             .output()
@@ -53,6 +63,9 @@ impl Renamer {
             .filter(|output| output.status.success())
             .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_string())
             .filter(|result| !result.is_empty())
-            .ok_or_else(|| anyhow!("Failed to generate branch name using Claude Code"))
+            .ok_or_else(|| anyhow!("Failed to generate branch name using Claude Code"));
+
+        spinner.finish_and_clear();
+        result
     }
 }
