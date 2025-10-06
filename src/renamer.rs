@@ -30,10 +30,10 @@ impl Renamer {
     }
 
     /// Rename the current branch to an AI-generated name
-    pub fn name_auto(&self) -> Result<(String, String)> {
+    pub fn name_auto(&self, target_branch: Option<&str>) -> Result<(String, String)> {
         let diff = &self
             .repo
-            .get_branch_diff(&self.current_branch, &self.default_branch)?;
+            .get_branch_diff(&self.current_branch, target_branch.unwrap_or(&self.default_branch))?;
         let suggested_name = Self::generate(diff)?;
         if suggested_name == self.current_branch {
             bail!("Generated name '{suggested_name}' is the same as current branch name");
