@@ -35,11 +35,10 @@ impl Renamer {
             .repo
             .get_branch_diff(&self.current_branch, target_branch.unwrap_or(&self.default_branch))?;
         let suggested_name = Self::generate(diff)?;
-        if suggested_name == self.current_branch {
-            bail!("Generated name '{suggested_name}' is the same as current branch name");
-        }
 
-        self.repo.rename_branch(&self.current_branch, &suggested_name)?;
+        if suggested_name != self.current_branch {
+            self.repo.rename_branch(&self.current_branch, &suggested_name)?;
+        }
 
         Ok((self.current_branch.clone(), suggested_name))
     }
