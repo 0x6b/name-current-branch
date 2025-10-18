@@ -26,7 +26,9 @@ Examples of correct format:
 
 OUTPUT ONLY THE BRANCH NAME, NO EXPLANATIONS OR EXTRA TEXT.
 
-Analyze these git changes and generate an appropriate branch name:
+IMPORTANT: Consider the ENTIRE SCOPE of all changes shown in the git diff below. Generate a branch name that best captures the overall purpose and primary goal of the complete set of modifications, rather than focusing on individual files or specific parts of the changes.
+
+Analyze the complete git diff and generate an appropriate branch name:
 
 {diff_content}
 '''
